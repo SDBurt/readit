@@ -43,11 +43,11 @@ export default function Register() {
   }
 
   return (
-    <div>
-    <Head>
+
+    <div className="flex bg-white">
+          <Head>
       <title>Register</title>
     </Head>
-    <div className="flex">
       <div className="h-screen bg-center bg-cover w-36" style={{backgroundImage: "url('/images/bricks.jpg')"}}></div>
       <div className="flex flex-col justify-center pl-6 pr-6 max-w-72">
         <div className="w-70">
@@ -102,7 +102,6 @@ export default function Register() {
           </small>
         </div>
       </div>
-    </div>
     </div>
   )
 }
