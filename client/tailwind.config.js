@@ -8,8 +8,9 @@ module.exports = {
     extend: {
       spacing: {
         70: '17.5rem',
-        160: '14rem'
+        160: '40rem'
       },
+      container: false,
       colors: {
         blue: {
           100: '#cce4f6',
@@ -28,5 +29,18 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    function({ addComponents }) {
+      addComponents({
+        '.container': {
+          width: '100%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          '@screen sm': { maxWidth: '640px' },
+          '@screen md': { maxWidth: '768px' },
+          '@screen lg': { maxWidth: '975px' },
+        }
+      })
+    }
+  ],
 }

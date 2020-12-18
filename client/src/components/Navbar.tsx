@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
             {/* Search Input*/} 
             <div className="flex items-center mx-auto bg-gray-100 border rounded hover:border-blue-500 hover:bg-white">
             <i className="px-2 text-gray-500 fas fa-search"></i>
-            <input type='text' placeholder='Search' className='py-1 pr-3 bg-transparent rounded w-160 focus:outline-none' />
+            <input type='text' placeholder='Search' className='py-1 pr-3 bg-transparent rounded max-w-160 focus:outline-none' />
             </div>
             {/* Auth Buttons */}
             <div className="flex">
