@@ -39,3 +39,15 @@ export interface Sub {
     bannerUrl:  string
     postCount?: number
 }
+
+export interface Comment {
+    identifier: string
+    body: string
+    createdAt: string
+    updatedAt: string
+    username: string
+
+    // Virtuals
+    voteScore: number
+    userVote:number
+}

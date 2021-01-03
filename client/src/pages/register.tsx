@@ -27,11 +27,15 @@ export default function Register() {
       return
     }
 
+    const escapedEmail = escape(email)
+    const escapedUsername = escape(username)
+    const escapedpassword = escape(password)
+
     try {
       await Axios.post('/auth/register', {
-        email,
-        password,
-        username
+        escapedEmail,
+        escapedpassword,
+        escapedUsername
       });
 
       setErrors({})

@@ -12,6 +12,7 @@ import trim from './middleware/trim'
 import authRoutes from './routes/auth'
 import postRoutes from './routes/posts'
 import subRoutes from './routes/subs'
+import miscRoutes from './routes/misc'
 
 const app = express()
 const PORT = process.env.PORT;
@@ -28,6 +29,8 @@ app.use(cors(
     }
 ))
 
+app.use(express.static('public'))
+
 app.get('/', (_, res) => {
     return res.send('Hello World')
 })
@@ -35,6 +38,7 @@ app.get('/', (_, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/posts', postRoutes)
 app.use('/api/subs', subRoutes)
+app.use('/api/misc', miscRoutes)
 
 app.listen(PORT, async () => {
     console.log(`Server running at http://localhost:${PORT}`)

@@ -1,8 +1,9 @@
 import { Router, Request, Response } from "express";
 import Comment from "../entities/Comment";
-import Post from "../entities/Posts";
+import Post from "../entities/Post";
 import Sub from "../entities/Sub";
 
+import user from "../middleware/user";
 import auth from '../middleware/auth'
 
 const createPost = async (req: Request, res: Response) => {
@@ -35,8 +36,14 @@ const getPosts = async (_: Request, res: Response) => {
 
     try {
         const posts = await Post.find({
-            order: { createdAt: 'DESC' }
+            order: { createdAt: 'DESC' },
+            relations: ['comments', 'votes', 'sub'],
         })
+
+        if (res.locals.user) {
+            posts.forEach(p => p.setUserVote(res.locals.user))
+        }
+
         return res.json(posts)
 
     } catch (err) {
@@ -81,17 +88,40 @@ const createComment = async (req:Request, res: Response) => {
         return res.json(comment)
 
     } catch (err) {
-        console.log(err)
         return res.status(404).json({error: 'Post not found'})
     }
 
 }
 
+const getPostComments = async(req: Request, res: Response) => {
+    
+    const {identifier, slug} = req.params
+    
+    try {
+        const post = await Post.findOneOrFail({ identifier, slug })
+        const comments = await Comment.find({
+            where: { post },
+            order: { createdAt: 'DESC'},
+            relations: ['votes']
+        })
+
+        if (res.locals.user) {
+            comments.forEach(c => c.setUserVote(res.locals.user))
+        }
+
+        return res.json(comments)
+
+    } catch (err) {
+        return res.status(500).json({error: 'Something went wrong'})
+    }
+}
+
 const router = Router()
 
-router.post('/', auth, createPost)
-router.get('/', getPosts)
+router.post('/', user, auth, createPost)
+router.get('/', user, getPosts)
 router.get('/:identifier/:slug', getPost)
-router.post('/:identifier/:slug/comments', auth, createComment)
+router.post('/:identifier/:slug/comments', user, auth, createComment)
+router.get('/:identifier/:slug/comments', user, getPostComments)
 
 export default router

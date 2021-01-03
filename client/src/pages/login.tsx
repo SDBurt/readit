@@ -22,10 +22,13 @@ export default function Login() {
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
 
+    const escapedUsername = escape(username)
+    const escapedpassword = escape(password)
+
     try {
       const res = await Axios.post('/auth/login', {
-        username,
-        password
+        escapedUsername,
+        escapedpassword
       });
 
       dispatch('LOGIN', res.data)
