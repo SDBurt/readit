@@ -1,9 +1,10 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, Fragment, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Axios from 'axios'
 import { useRouter } from "next/router";
 import InputGroup from '../components/InputGroup';
+import { useAuthState } from '../context/auth'
 
 export default function Register() {
 
@@ -13,7 +14,10 @@ export default function Register() {
   const [agreement, setAgreement] = useState(false)
   const [errors, setErrors] = useState<any>({})
   
+  const { authenticated, loading } = useAuthState()
+
   const router = useRouter()
+  if (authenticated) router.push('/')
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -38,16 +42,10 @@ export default function Register() {
       console.log(err)
       setErrors(err.response.data)
     }
-    
-
   }
 
-  return (
-
-    <div className="flex bg-white">
-          <Head>
-      <title>Register</title>
-    </Head>
+  let renderRegister = !loading && !authenticated ? (
+    <Fragment>
       <div className="h-screen bg-center bg-cover w-36" style={{backgroundImage: "url('/images/bricks.jpg')"}}></div>
       <div className="flex flex-col justify-center pl-6 pr-6 max-w-72">
         <div className="w-70">
@@ -102,6 +100,18 @@ export default function Register() {
           </small>
         </div>
       </div>
+    </Fragment>
+  ) : (
+    <p>Loading...</p>
+  )
+
+  return (
+
+    <div className="flex bg-white">
+      <Head>
+        <title>Register</title>
+      </Head>
+      {renderRegister}
     </div>
   )
 }
