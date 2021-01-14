@@ -35,15 +35,19 @@ export default function Home() {
                 {
                   topSubs?.map((sub: Sub, index: number) => (
                     <div key={sub.name} className={classNames('flex items-center px-4 py-2 text-xs', {'border-b': index < topSubs.length-1})} >
-                      <div className="mr-2 overflow-hidden rounded-full">
-                        <Link href={`/r/${sub.name}`}>
-                          <a className="hover:cursor-pointer">
-                            <Image src={sub.imageUrl} alt="Sub" width={24}  height={24}/>
-                          </a>
-                        </Link>
-                      </div>
                       <Link href={`/r/${sub.name}`}>
-                        <a className="font-bold hover:cursor-pointer">
+                        <a className="hover:cursor-pointer">
+                          <Image 
+                            className="rounded-full"
+                            src={sub.imageUrl}
+                            alt="Sub"
+                            width={24}
+                            height={24}
+                          />
+                        </a>
+                      </Link>
+                      <Link href={`/r/${sub.name}`}>
+                        <a className="ml-2 font-bold hover:cursor-pointer">
                           /r/{sub.name}
                         </a>
                       </Link>

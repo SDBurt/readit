@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Axios from 'axios'
 import { useRouter } from "next/router";
 import InputGroup from '../components/InputGroup';
-import { useAuthState } from '../context/auth'
+import { useAuthDispatch, useAuthState } from '../context/auth'
 
 export default function Register() {
 
@@ -14,6 +14,7 @@ export default function Register() {
   const [agreement, setAgreement] = useState(false)
   const [errors, setErrors] = useState<any>({})
   
+  const dispatch = useAuthDispatch()
   const { authenticated, loading } = useAuthState()
 
   const router = useRouter()
@@ -32,13 +33,15 @@ export default function Register() {
     const escapedpassword = escape(password)
 
     try {
+      dispatch('LOADING')
       await Axios.post('/auth/register', {
-        escapedEmail,
-        escapedpassword,
-        escapedUsername
+        email: escapedEmail,
+        password: escapedpassword,
+        username: escapedUsername
       });
 
       setErrors({})
+      dispatch('STOP_LOADING')
       router.push('/login')
   
       

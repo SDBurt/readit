@@ -26,14 +26,16 @@ export default function Login() {
     const escapedpassword = escape(password)
 
     try {
+      dispatch('LOADING')
       const res = await Axios.post('/auth/login', {
-        escapedUsername,
-        escapedpassword
+        username: escapedUsername,
+        password: escapedpassword
       });
 
       dispatch('LOGIN', res.data)
 
       setErrors({})
+      dispatch('STOP_LOADING')
       router.back()
   
       

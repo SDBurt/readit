@@ -30,20 +30,24 @@ const reducer = (state: State, { type, payload }: Action) => {
                 authenticated: true,
                 user: payload
             }
-        
-            case 'LOGOUT':
-                return {
-                    ...state,
-                    authenticated: false,
-                    user: null
-                }
-            case 'STOP_LOADING':
-                return {
-                    ...state,
-                    loading: false
-                }
-            default:
-                throw new Error(`Unknown action type: ${type}`)
+        case 'LOGOUT':
+            return {
+                ...state,
+                authenticated: false,
+                user: null
+            }
+        case 'STOP_LOADING':
+            return {
+                ...state,
+                loading: false
+            }
+        case 'LOADING':
+            return {
+                ...state,
+                loading: true
+            }
+        default:
+            throw new Error(`Unknown action type: ${type}`)
     }
 }
 
@@ -57,6 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode}) => {
     useEffect(() => {
         Axios.get('/auth/me')
             .then((res) => {
+                dispatch('LOADING')
                 dispatch('LOGIN', res.data)
             })
             .catch(err => {

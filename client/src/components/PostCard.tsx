@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import router from 'next/router';
 import Link from 'next/link'
 import Axios from 'axios'
@@ -6,15 +6,11 @@ import classNames from "classnames";
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
-
-
 import { Post } from '../types'
 import { useAuthState } from '../context/auth'
 import ActionButton from './ActionButton'
 
 dayjs.extend(relativeTime)
-
-
 
 interface PostCardProps {
   post: Post
@@ -22,20 +18,25 @@ interface PostCardProps {
 
 const PostCard = ({post: {identifier, slug, title, body, subName, createdAt, voteScore, userVote, commentCount, url, username} }:PostCardProps) => {
 
+  const [ voting, setVoting ] = useState(false)
   const { authenticated } = useAuthState()
 
   const vote = async (value:number) => {
+
     // if not logged in, go to login
     if (!authenticated) router.push('/login')
+
+    setVoting(true)
 
     // if vote is the same, reset vote
     if (value === userVote) value = 0
 
     try {
       const res = await Axios.post('/misc/vote', {identifier,slug, value})
-      console.log(res.data)
+      setVoting(false)
     } catch( err ) {
       console.error(err)
+      setVoting(false)
     }
   }
 
@@ -47,12 +48,17 @@ const PostCard = ({post: {identifier, slug, title, body, subName, createdAt, vot
                 onClick={() => vote(1)}
               >
                   {/* Arrow up */}
-                  <i className={classNames('fas fa-arrow-up', {'text-red-500' : userVote === 1})}></i>
+                  <i className={classNames('fas fa-arrow-up', {'text-red-500' : userVote === 1})}></i>      
               </div>
               {/* Vote value */}
-              <div className='text-xs font-bold text-gray-900'>
+              { voting ? (
+                <i className='fas fa-spinner'></i>  
+              ) : (
+                <div className='text-xs font-bold text-gray-900'>
                   <p>{voteScore || 0}</p>
-              </div>
+                </div>
+              )}
+              
               <div className='w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600'
                 onClick={() => vote(-1)}
               >
